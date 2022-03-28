@@ -1,5 +1,5 @@
-registry-proxy:
-  tag: 2
+registryProxy:
+  tag:
 
 proxy:
   remoteurl: https://registry-1.docker.io
@@ -14,6 +14,12 @@ s3:
   secure: true
   v4auth: true
   skipverify: false
+
+secret:
+  key:
+  store:
+    name: default
+    kind: ClusterSecretStore
 
 prometheus:
   enable: false
