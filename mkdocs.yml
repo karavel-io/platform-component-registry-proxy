@@ -1,7 +1,7 @@
-site_name: Example Component
-site_url: https://docs.karavel.io/components/example
-repo_name: projectkaravel/platform-component-example
-repo_url: https://github.com/projectkaravel/platform-component-example
+site_name: Registry-proxy Component
+site_url: https://docs.karavel.io/components/registry-proxy
+repo_name: projectkaravel/platform-component-registry-proxy
+repo_url: https://github.com/projectkaravel/platform-component-registry-proxy
 copyright: © 2021 The Karavel Project | Documentation distributed under CC BY SA 4.0
 strict: false
 theme:

@@ -5,12 +5,12 @@
 The component is packaged as a [Helm] chart with special metadata added to the [Chart.yaml](chart/Chart.yaml) in the form
 of annotations. 
 
-To propose a change to this component, first [open an issue](https://github.com/projectkaravel/platform-component-example/issues/new)
+To propose a change to this component, first [open an issue](https://github.com/projectkaravel/platform-component-registry-proxy/issues/new)
 where you explain the feature you want to implement. This will help maintainers better evaluate your proposal in light of the 
 broader roadmap for the component and advise you on how to move forward with your contribution.
 
 When you are ready to implement your changes, fork the repository and commit your feature to your fork.
-Finally [open a pull request](https://github.com/projectkaravel/platform-component-example/compare/main) from your fork to the `main`
+Finally [open a pull request](https://github.com/projectkaravel/platform-component-registry-proxy/compare/main) from your fork to the `main`
 branch of this repository. A maintainer will review your changes and help you successfully land your contribution.
 
 Please note we have a [code of conduct], please follow it in all your interactions with the project.

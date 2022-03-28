@@ -16,8 +16,8 @@ This branch will host the last-minute changes and fixes in preparation for the a
 
 ### Creating the release
 Once the pull request is approved and merged, immediately create a new branch called `X.Y` from `main`, then tag the new version
-by running `git tag X.Y.0` on that branch. A [CI job](https://github.com/projectkaravel/platform-component-example/actions/workflows/release.yml) 
-will kick in, packaging the component and creating the corresponding [release](https://github.com/projectkaravel/platform-component-example/releases).
+by running `git tag X.Y.0` on that branch. A [CI job](https://github.com/projectkaravel/platform-component-registry-proxy/actions/workflows/release.yml) 
+will kick in, packaging the component and creating the corresponding [release](https://github.com/projectkaravel/platform-component-registry-proxy/releases).
 
 Edit the release body with the relevant CHANGELOG section and publish it.
 
@@ -37,7 +37,7 @@ Until then, bugfixes must be backported to all supported minor releases. See the
 Sometimes, bugs are found in a component released that must be quickly fixed and released to users.
 When a bug is found, a bugfix should be implemented by forking the oldest affected release branch (e.g. `1.3`).
 
-For example, let's assume the latest release is `1.4.2`, and we're fixing a bug that affects both `1.4.2` and `1.3.1` versions
+For registry-proxy, let's assume the latest release is `1.4.2`, and we're fixing a bug that affects both `1.4.2` and `1.3.1` versions
 of the component.
 
 Create a branch called `bugfix/something-descriptive` starting from the `1.3` branch, implement the fix, then open a pull request targeting

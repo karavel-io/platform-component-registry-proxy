@@ -1,17 +1,17 @@
 apiVersion: v2
-name: example
-description: Example component for Karavel
+name: registry-proxy
+description: Registry-proxy component for Karavel
 type: application
 version: 0.1.0-SNAPSHOT
-appVersion: 1.0.0
+appVersion: 2.8.1
 maintainers:
-  - name: JaneDoe
-    email: jane.doe@karavel.io
+  - name: Hamcha
+    email: alessandro.gatti@mikamai.com
 
-home: https://example.com
+home: https://docs.docker.com/registry/
 sources:
-  - https://github.com/example/example
-  - https://github.com/projectkaravel/platform-component-example
+  - https://github.com/distribution/distribution
+  - https://github.com/karavel-io/platform-component-registry-proxy
 
 annotations:
   karavel.io/dependencies: cert-manager, external-secrets

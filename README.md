@@ -1,14 +1,15 @@
-# Platform Component Template
+# Registry-Proxy Component
 
-Template repository for Karavel Container Platform components
+![Component version](https://img.shields.io/badge/dynamic/yaml?color=blue&label=component+version&query=$.entries.registry-proxy[0].version&url=https%3A%2F%2Frepository.platform.karavel.io%2Funstable%2Findex.yaml&style=for-the-badge)
+[![Registry-proxy version](https://img.shields.io/badge/dynamic/yaml?color=blue&label=registry-proxy+version&query=$.entries.registry-proxy[0].appVersion&url=https%3A%2F%2Frepository.platform.karavel.io%2Funstable%2Findex.yaml&style=for-the-badge)](https://docs.docker.com/registry/)
+[Documentation](https://docs.karavel.io/components/registry-proxy)
 
-## How to use this repository
+## Overview
 
-To create a new platform component using this template, simply click on the big "Use this template" green button on GitHub.
-This will bring you to the new repository form where you can fill in the information about the new repo.
+Docker registry mirror as pull-through cache for external registries
 
-Once this is done, clone the newly created repository and run the `setup.sh` script located in the root. It will prompt you
-for some information like the component name and upstream links, edit the files to replace the placeholder values and destroy itself.
+## License
 
-Once this is done, the new component is ready to be developed!
+The Registry-proxy Component is licensed under the [Apache 2.0 license](LICENSE).
 
+The Karavel Container Platform is licensed under the [Apache 2.0 license](https://github.com/projectkaravel/platform/blob/main/LICENSE).

@@ -1,5 +1,19 @@
-example:
-  image: nginx
-  tag: latest
+registry-proxy:
+  tag: 2
+
+proxy:
+  remoteurl: https://registry-1.docker.io
+
+store: filesystem # filesystem | s3
+s3:
+  region: ""
+  bucket: ""
+  endpoint: ""
+  prefix: ""
+  encrypted: true
+  secure: true
+  v4auth: true
+  skipverify: false
+
 prometheus:
   enable: false

@@ -1,35 +1,39 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: {{ include "example.name" . }}
+  name: {{ include "registry-proxy.name" . }}
   namespace: {{ .Release.Namespace }}
   labels:
-    app.kubernetes.io/name: {{ include "example.name" . }}
-    {{- include "example.labels" . | nindent 4 }}
+    app.kubernetes.io/name: {{ include "registry-proxy.name" . }}
+    {{- include "registry-proxy.labels" . | nindent 4 }}
+  {{ with .Values.s3.iamRole }}
+  annotations:
+    iam.amazonaws.com/role: {{ . }}
+  {{ end }}
 spec:
   replicas: 1
   selector:
     matchLabels:
-      app.kubernetes.io/name: {{ include "example.name" . }}
-      {{- include "example.selectorLabels" . | nindent 6 }}
+      app.kubernetes.io/name: {{ include "registry-proxy.name" . }}
+      {{- include "registry-proxy.selectorLabels" . | nindent 6 }}
   template:
     metadata:
       labels:
-        app.kubernetes.io/name: {{ include "example.name" . }}
-        {{- include "example.labels" . | nindent 8 }}
+        app.kubernetes.io/name: {{ include "registry-proxy.name" . }}
+        {{- include "registry-proxy.labels" . | nindent 8 }}
     spec:
-      serviceAccountName: {{ include "example.name" . }}
+      serviceAccountName: {{ include "registry-proxy.name" . }}
       securityContext:
         runAsUser: 1000
         runAsGroup: 1000
         runAsNonRoot: true
       containers:
-        - name: example
-          image: "{{ .Values.example.image }}:{{ .Values.example.tag | default .Chart.AppVersion }}"
+        - name: registry-proxy
+          image: "public.ecr.aws/docker/library/registry:{{ .Values.registry-proxy.tag | default .Chart.AppVersion }}"
           imagePullPolicy: IfNotPresent
           ports:
             - name: http
-              containerPort: 80
+              containerPort: 5000
               protocol: TCP
           livenessProbe:
             httpGet:
@@ -46,3 +50,57 @@ spec:
             requests:
               cpu: 100m
               memory: 20Mi
+          volumes:
+            {{- if ne .Values.store "filesystem" }}
+            - name: storage
+              emptyDir: {}
+            {{- end }}
+          {{- with .Values.secret }}
+          envFrom:
+            - secretRef:
+                name: {{ include "registry-proxy.name" $ }}-secrets
+                optional: true
+          {{- end }}
+          env:
+          {{- if eq .Values.storage "filesystem" }}
+            - name: REGISTRY_STORAGE_FILESYSTEM_ROOTDIRECTORY
+              value: "/var/lib/registry"
+          {{- else if eq .Values.storage "s3" }}
+            {{- if or (and .Values.secrets.s3.secretKey .Values.secrets.s3.accessKey) .Values.secrets.s3.secretRef }}
+            - name: REGISTRY_STORAGE_S3_ACCESSKEY
+              valueFrom:
+                secretKeyRef:
+                  name: {{ if .Values.secrets.s3.secretRef }}{{ .Values.secrets.s3.secretRef }}{{ else }}{{ template "docker-registry.fullname" . }}-secret{{ end }}
+                  key: s3AccessKey
+            - name: REGISTRY_STORAGE_S3_SECRETKEY
+              valueFrom:
+                secretKeyRef:
+                  name: {{ if .Values.secrets.s3.secretRef }}{{ .Values.secrets.s3.secretRef }}{{ else }}{{ template "docker-registry.fullname" . }}-secret{{ end }}
+                  key: s3SecretKey
+            {{- end }}
+            - name: REGISTRY_STORAGE_S3_REGION
+              value: {{ required ".Values.s3.region is required" .Values.s3.region }}
+          {{- if .Values.s3.endpoint }}
+            - name: REGISTRY_STORAGE_S3_REGIONENDPOINT
+              value: {{ .Values.s3.endpoint }}
+          {{- end }}
+            - name: REGISTRY_STORAGE_S3_BUCKET
+              value: {{ required ".Values.s3.bucket is required" .Values.s3.bucket }}
+          {{- if .Values.s3.prefix }}
+            - name: REGISTRY_STORAGE_S3_ROOTDIRECTORY
+              value: {{ .Values.s3.prefix | quote }}
+          {{- end }}
+          {{- if .Values.s3.encrypt }}
+            - name: REGISTRY_STORAGE_S3_ENCRYPT
+              value: {{ .Values.s3.encrypt | quote }}
+          {{- end }}
+          {{- if .Values.s3.secure }}
+            - name: REGISTRY_STORAGE_S3_SECURE
+              value: {{ .Values.s3.secure | quote }}
+          {{- end }}
+          {{- if .Values.s3.skipverify }}
+            - name: REGISTRY_STORAGE_S3_SKIPVERIFY
+              value: {{ .Values.s3.skipverify | quote }}
+          {{- end }}
+            - name: REGISTRY_PROXY_REMOTEURL
+              value: {{ required ".Values.proxy.remoteurl is required" .Values.proxy.remoteurl }}

@@ -1,11 +1,11 @@
 apiVersion: rbac.authorization.k8s.io/v1
 kind: Role
 metadata:
-  name: {{ include "example.name" . }}
+  name: {{ include "registry-proxy.name" . }}
   namespace: {{ .Release.Namespace }}
   labels:
-    app.kubernetes.io/name: {{ include "example.name" . }}
-    {{- include "example.labels" . | nindent 4 }}
+    app.kubernetes.io/name: {{ include "registry-proxy.name" . }}
+    {{- include "registry-proxy.labels" . | nindent 4 }}
 rules:
   - apiGroups: ['*']
     resources: ['*']
@@ -14,25 +14,29 @@ rules:
 apiVersion: rbac.authorization.k8s.io/v1
 kind: RoleBinding
 metadata:
-  name: {{ include "example.name" . }}
+  name: {{ include "registry-proxy.name" . }}
   namespace: {{ .Release.Namespace }}
   labels:
-    app.kubernetes.io/name: {{ include "example.name" . }}
-    {{- include "example.labels" . | nindent 4 }}
+    app.kubernetes.io/name: {{ include "registry-proxy.name" . }}
+    {{- include "registry-proxy.labels" . | nindent 4 }}
 roleRef:
   apiGroup: rbac.authorization.k8s.io
   kind: RoleBinding
-  name: {{ include "example.name" . }}
+  name: {{ include "registry-proxy.name" . }}
 subjects:
   - kind: ServiceAccount
-    name: {{ include "example.name" . }}
+    name: {{ include "registry-proxy.name" . }}
     namespace: {{ .Release.Namespace }}
 ---
 apiVersion: v1
 kind: ServiceAccount
 metadata:
-  name: {{ include "example.name" . }}
+  name: {{ include "registry-proxy.name" . }}
   namespace: {{ .Release.Namespace }}
   labels:
-    app.kubernetes.io/name: {{ include "example.name" . }}
-    {{- include "example.labels" . | nindent 4 }}
+    app.kubernetes.io/name: {{ include "registry-proxy.name" . }}
+    {{- include "registry-proxy.labels" . | nindent 4 }}
+  {{ with .Values.s3.eksRole }}
+  annotations:
+    eks.amazonaws.com/role-arn: {{ . }}
+  {{ end }}
