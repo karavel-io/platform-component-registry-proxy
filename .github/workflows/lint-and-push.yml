@@ -1,0 +1,51 @@
+name: Lint and push edge release
+on:
+  push:
+    branches:
+      - '*'
+  pull_request: {}
+jobs:
+  lint:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+
+      - name: Install Helm
+        uses: azure/setup-helm@v1
+        with:
+          version: v3.6.2
+
+      - name: Set up chart-testing
+        uses: helm/chart-testing-action@v2.1.0
+
+      - name: Lint component charts
+        run: ct lint --charts chart
+
+  push:
+    needs: lint
+    runs-on: ubuntu-latest
+    if: ${{ github.event_name == 'push' && github.ref == 'refs/heads/main' }}
+    steps:
+      - uses: actions/checkout@v2
+
+      - name: Install Helm
+        uses: azure/setup-helm@v1
+        with:
+          version: v3.6.2
+
+      - uses: actions/setup-python@v2
+        with:
+          python-version: 3.9
+
+      - name: Push to unstable registry
+        run: |
+          helm plugin install https://github.com/hypnoglow/helm-s3.git --version v0.10.0
+          helm repo add unstable s3://$HELM_BUCKET_NAME/unstable
+          helm package chart -d dist
+          chart=$(ls dist)
+          helm s3 push --force ./dist/$chart unstable --relative
+        env:
+          AWS_ACCESS_KEY_ID: ${{ secrets.PLATFORM_COMPONENTS_AWS_ACCESS_KEY_ID  }}
+          AWS_SECRET_ACCESS_KEY: ${{ secrets.PLATFORM_COMPONENTS_AWS_SECRET_ACCESS_KEY  }}
+          AWS_DEFAULT_REGION: eu-west-1
+          HELM_BUCKET_NAME: ${{ secrets.PLATFORM_COMPONENTS_BUCKET_NAME }}

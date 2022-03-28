@@ -1,0 +1,56 @@
+name: Release
+
+on:
+  push:
+    tags:
+      - '*.*.*'
+
+jobs:
+  release:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+
+      - name: Install Helm
+        uses: azure/setup-helm@v1
+        with:
+          version: v3.6.2
+
+      - name: Get tag
+        id: tag
+        run: echo ::set-output name=tag::${GITHUB_REF#refs/tags/}
+
+      - name: Package component
+        run: helm package chart -d dist --version $TAG
+        env:
+          TAG: ${{ steps.tag.outputs.tag }}
+
+      - name: Release
+        uses: softprops/action-gh-release@v1
+        with:
+          draft: true
+          body: |
+            # TODO
+            Copy the relevant entries from CHANGELOG.md for this release
+          files: dist/*.tgz
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      - uses: actions/setup-python@v2
+        with:
+          python-version: 3.9
+
+      - name: Push to unstable registry
+        run: |
+          helm plugin install https://github.com/hypnoglow/helm-s3.git --version v0.10.0
+          helm repo add unstable s3://$HELM_BUCKET_NAME/unstable
+          helm package chart -d dist --version $TAG
+          chart=$(ls dist)
+          helm s3 push ./dist/$chart unstable --relative
+        env:
+          AWS_ACCESS_KEY_ID: ${{ secrets.PLATFORM_COMPONENTS_AWS_ACCESS_KEY_ID  }}
+          AWS_SECRET_ACCESS_KEY: ${{ secrets.PLATFORM_COMPONENTS_AWS_SECRET_ACCESS_KEY  }}
+          AWS_DEFAULT_REGION: eu-west-1
+          HELM_BUCKET_NAME: ${{ secrets.PLATFORM_COMPONENTS_BUCKET_NAME }}
+          TAG: ${{ steps.tag.outputs.tag }}

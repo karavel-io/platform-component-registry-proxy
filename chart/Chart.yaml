@@ -1,0 +1,18 @@
+apiVersion: v2
+name: example
+description: Example component for Karavel
+type: application
+version: 0.1.0-SNAPSHOT
+appVersion: 1.0.0
+maintainers:
+  - name: JaneDoe
+    email: jane.doe@karavel.io
+
+home: https://example.com
+sources:
+  - https://github.com/example/example
+  - https://github.com/projectkaravel/platform-component-example
+
+annotations:
+  karavel.io/dependencies: cert-manager, external-secrets
+  prometheus.enable: prometheus

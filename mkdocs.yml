@@ -1,0 +1,27 @@
+site_name: Example Component
+site_url: https://docs.karavel.io/components/example
+repo_name: projectkaravel/platform-component-example
+repo_url: https://github.com/projectkaravel/platform-component-example
+copyright: © 2021 The Karavel Project | Documentation distributed under CC BY SA 4.0
+strict: false
+theme:
+  name: material
+  palette:
+    scheme: slate
+markdown_extensions:
+  - meta
+  - footnotes
+  - pymdownx.highlight
+  - pymdownx.tabbed
+  - pymdownx.superfences
+  - admonition
+  - pymdownx.emoji:
+      emoji_index: !!python/name:materialx.emoji.twemoji
+      emoji_generator: !!python/name:materialx.emoji.to_svg
+  - toc:
+      permalink: true
+nav:
+  - Overview: index.md
+  - 0.1.0:
+    - 0.1.0/configuration.md
+  - Back to platform docs: https://docs.karavel.io/

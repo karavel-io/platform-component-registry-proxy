@@ -1,0 +1,5 @@
+example:
+  image: nginx
+  tag: latest
+prometheus:
+  enable: false
