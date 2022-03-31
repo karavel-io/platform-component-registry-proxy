@@ -21,7 +21,7 @@ metadata:
     {{- include "registry-proxy.labels" . | nindent 4 }}
 roleRef:
   apiGroup: rbac.authorization.k8s.io
-  kind: RoleBinding
+  kind: Role
   name: {{ include "registry-proxy.name" . }}
 subjects:
   - kind: ServiceAccount
