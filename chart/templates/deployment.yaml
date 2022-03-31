@@ -28,7 +28,7 @@ spec:
         runAsGroup: 1000
         runAsNonRoot: true
       containers:
-        - name: registryProxy
+        - name: registry-proxy
           image: "public.ecr.aws/docker/library/registry:{{ .Values.registryProxy.tag | default .Chart.AppVersion }}"
           imagePullPolicy: IfNotPresent
           ports:
