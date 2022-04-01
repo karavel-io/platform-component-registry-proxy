@@ -8,7 +8,7 @@ store: filesystem  # filesystem | s3
 s3:
   region: ""
   bucket: ""
-  endpoint: s3.amazonaws.com
+  endpoint:
   prefix: ""
   encrypted: true
   secure: true
