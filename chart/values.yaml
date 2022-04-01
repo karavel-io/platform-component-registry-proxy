@@ -4,11 +4,11 @@ registryProxy:
 proxy:
   remoteurl: https://registry-1.docker.io
 
-store: filesystem  # filesystem | s3
+store: filesystem # filesystem | s3
 s3:
   region: ""
   bucket: ""
-  endpoint: ""
+  endpoint: s3.amazonaws.com
   prefix: ""
   encrypted: true
   secure: true
