@@ -62,6 +62,8 @@ spec:
                 optional: true
           {{- end }}
           env:
+            - name: REGISTRY_STORAGE
+              value: {{ required ".Values.store is required" .Values.store }}
           {{- if eq .Values.store "filesystem" }}
             - name: REGISTRY_STORAGE_FILESYSTEM_ROOTDIRECTORY
               value: "/var/lib/registry"
