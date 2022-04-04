@@ -50,11 +50,12 @@ spec:
             requests:
               cpu: 100m
               memory: 20Mi
+          volumeMounts:
+            - name: storage
+              mountPath: "/data"
           volumes:
-            {{- if ne .Values.store "filesystem" }}
             - name: storage
               emptyDir: {}
-            {{- end }}
           {{- with .Values.secret }}
           envFrom:
             - secretRef:
@@ -66,7 +67,7 @@ spec:
               value: {{ required ".Values.store is required" .Values.store }}
           {{- if eq .Values.store "filesystem" }}
             - name: REGISTRY_STORAGE_FILESYSTEM_ROOTDIRECTORY
-              value: "/var/lib/registry"
+              value: "/data"
           {{- else if eq .Values.store "s3" }}
             - name: REGISTRY_STORAGE_S3_REGION
               value: {{ required ".Values.s3.region is required" .Values.s3.region }}
