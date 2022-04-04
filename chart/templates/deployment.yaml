@@ -27,6 +27,9 @@ spec:
         runAsUser: 1000
         runAsGroup: 1000
         runAsNonRoot: true
+      volumes:
+        - name: storage
+          emptyDir: {}
       containers:
         - name: registry-proxy
           image: "public.ecr.aws/docker/library/registry:{{ .Values.registryProxy.tag | default .Chart.AppVersion }}"
@@ -53,9 +56,6 @@ spec:
           volumeMounts:
             - name: storage
               mountPath: "/data"
-          volumes:
-            - name: storage
-              emptyDir: {}
           {{- with .Values.secret }}
           envFrom:
             - secretRef:
